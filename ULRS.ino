@@ -35,13 +35,13 @@
  *      Quick config
  */
 // Harware role Receiver or Transmitter
-//#define HW_ROLE 0 // TX
-#define HW_ROLE 1 // RX
+#define HW_ROLE 0 // TX
+//#define HW_ROLE 1 // RX
 
 // Hardware type
 
-//#define HW_TYPE 0 // Hobbyking Orange OpenLRS TX 1W
-#define HW_TYPE 1 // Hobbyking Orange OpenLRS RX 100mW v1
+#define HW_TYPE 0 // Hobbyking Orange OpenLRS TX 1W
+//#define HW_TYPE 1 // Hobbyking Orange OpenLRS RX 100mW v1
 //#define HW_TYPE 2 // Hobbyking Orange OpenLRS RX 100mW v2
 //#define HW_TYPE 3 // Hobbyking Orange OpenLRSng RX 1W
 
@@ -136,6 +136,8 @@ void InterruptInMicros(int m)
 #endif
 
 void loop() {
+  read_eeprom(); // read stuff from eeprom
+  waitforcomputer(); // enable AT mode
 #if (HW_ROLE == 0)
     TX_loop();
 #else

@@ -71,10 +71,15 @@ void save_failsafe_values(void)
   }
 }
 
-// not used
+
 void read_eeprom(void)
 {
-  CARRIER_FREQUENCY = 400000 + read_eeprom_uint(0);
+  // Doesn't work writing it directly as int value.... weird...
+  CARRIER_FREQUENCY = read_eeprom_uchar(0);
+  CARRIER_FREQUENCY *= 256;
+  CARRIER_FREQUENCY += read_eeprom_uchar(1);
+  CARRIER_FREQUENCY += 400000;
+
   HOPPING_STEP_SIZE = read_eeprom_uchar(2);
   hop_list[0] = read_eeprom_uchar(3);
   hop_list[1] = read_eeprom_uchar(4);
@@ -88,16 +93,37 @@ void read_eeprom(void)
 void write_eeprom(void)
 {
   write_eeprom_uint(0, CARRIER_FREQUENCY - 400000) ;
+  write_eeprom_uchar(2, HOPPING_STEP_SIZE);
+  
+  write_eeprom_uchar(3, hop_list[0]);
+  write_eeprom_uchar(4, hop_list[1]);
+  write_eeprom_uchar(5, hop_list[2]);
+
+  write_eeprom_uchar(6, RF_Header[0]);
+  write_eeprom_uchar(7, RF_Header[1]);
+  write_eeprom_uchar(8, RF_Header[2]);
+  write_eeprom_uchar(9, RF_Header[3]);
+}
+
+void mem_dump()
+{
+  for (int i = 0; i < 100; i++)
+  {
+    Serial.print(i);
+    Serial.print("x0: ");
+    Serial.println(read_eeprom_uchar(i),HEX);
+  }
 }
 
 // not used
 void eeprom_check(void)
 {
   byte temp1, temp2, temp3;
+/*
   Serial.begin(9600);
   Serial.print("W4E");
   delay(100);
-
+*/
   if (Serial.available() > 2)
   {
     if ((Serial.read() == 'R') && (Serial.read() == '4') && (Serial.read() == 'T'))
