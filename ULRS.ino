@@ -48,6 +48,13 @@
 bool IsBuzzerEnabled = false;
 bool debug = false;
 
+#define HARD_CODE_SETTINGS // This will disable configurator and use hardcoded settings below
+
+unsigned long CARRIER_FREQUENCY = 433575; // Carrier frequency in kHz
+unsigned char HOPPING_STEP_SIZE = 5; // Stepping size in kHz
+static unsigned char hop_list[4] = { 1, 5, 10}; // Hopping channels
+static unsigned char RF_Header[4] = {'F', 'L', 'I', 'P'}; // Radio header
+
 #include "boards.h"
 #include "config.h"
 #include <EEPROM.h>
@@ -136,8 +143,11 @@ void InterruptInMicros(int m)
 #endif
 
 void loop() {
-  read_eeprom(); // read stuff from eeprom
-  waitforcomputer(); // enable AT mode
+  #ifndef HARD_CODE_SETTINGS
+    read_eeprom(); // read stuff from eeprom
+    waitforcomputer(); // enable AT mode
+  #endif
+  
 #if (HW_ROLE == 0)
     TX_loop();
 #else

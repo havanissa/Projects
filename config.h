@@ -37,11 +37,6 @@
 #define configtimeout 2000    // Wait for x amout of ms before continue normal operation
 
 
-unsigned long CARRIER_FREQUENCY = 0;//433575;
-unsigned char HOPPING_STEP_SIZE = 0;//5;
-static unsigned char hop_list[4] = { 1, 5, 10};
-static unsigned char RF_Header[4] = {'F', 'L', 'I', 'P'};
-
 
 void RF22B_init_parameter(void);
 void _spi_write(unsigned char address, unsigned char data);
